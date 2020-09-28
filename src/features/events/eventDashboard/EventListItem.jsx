@@ -4,6 +4,7 @@ import EventLisAttendee from "./EventListAttendee";
 import { Link } from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteEvent} from "../eventActions";
+import {format} from 'date-fns'
 
 export default function EventListItem({ event }) {
     const dispatch = useDispatch()
@@ -13,7 +14,7 @@ export default function EventListItem({ event }) {
       <Segment>
         <Item.Group>
           <Item>
-            <Item.Image size='tiny' circular src='/assets/user.png' />
+            <Item.Image size='tiny' circular src="https://randomuser.me/api/portraits/men/20.jpg" />
             <Item.Content>
               <Item.Header content={event.title} />
               <Item.Description>
@@ -25,7 +26,7 @@ export default function EventListItem({ event }) {
       </Segment>
       <Segment>
         <span>
-          <Icon name='clock' /> {event.date}
+          <Icon name='clock' /> {format(event.date, 'MMMM d, yyyy h:mm a')}
           <Icon name='marker' /> {event.venue}
         </span>
       </Segment>
