@@ -8,15 +8,14 @@ import "react-toastify/dist/ReactToastify.min.css"
 import "react-calendar/dist/Calendar.css"
 import "./app/layout/styles.css";
 
-import App from "./app/layout/App";
 import {configureStore} from './app/store/configureStore'
+
+import App from "./app/layout/App";
 import * as serviceWorker from "./serviceWorker";
 import ScrollToTop from './app/layout/scrollToTop'
-import {loadEvents} from "./features/events/eventActions";
 
 const store = configureStore()
 
-store.dispatch(loadEvents())
 const rootEl = document.getElementById("root");
 
 function render() {

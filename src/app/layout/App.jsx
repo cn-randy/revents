@@ -12,6 +12,7 @@ import EventDetailedPage from "../../features/events/eventDetails/EventDetailedP
 import Sandbox from "../../features/sandbox/Sandbox";
 import ModalManager from "../common/modals/ModalManager";
 import {ToastContainer} from "react-toastify";
+import ErrorComponent from "../common/errors/ErrorComponent";
 
 /**
  * This is the entry component
@@ -37,6 +38,7 @@ function App() {
                     <Route path="/events/sandbox" component={Sandbox}/>
                     <Route path='/events/:id' component={EventDetailedPage}/>
                     <Route path='/events' component={EventDashboard}/>
+                    <Route path="/error" component={ErrorComponent} />
                     <Route path="/" component={HomePage}/>
                 </Switch>
             </Container>
