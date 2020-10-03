@@ -6,37 +6,40 @@ import MyTextInput from "../../app/common/form/MyTextInput";
 import {Button, Divider, Label} from "semantic-ui-react";
 import {useDispatch} from "react-redux";
 import {closeModal} from "../../app/common/modals/modalReducer";
-import {signinWithEmail} from "../../app/firestore/firebaseService";
+import {registerInFirebase} from "../../app/firestore/firebaseService";
 import SocialLogin from "./SocialLogin";
 
-const LoginForm = () => {
+const RegisterForm = () => {
     const dispatch = useDispatch()
 
     return (
         <div>
-            <ModalWrapper size="mini" header={"Sign in to Re-vents"}>
+            <ModalWrapper size="mini" header={"Register to Re-vents"}>
                 <Formik
-                    initialValues={{email: '', password: ''}}
+                    initialValues={{displayName: '', email: '', password: ''}}
                     validationSchema={Yup.object({
+                        displayName: Yup.string().required(),
                         email: Yup.string().required().email(),
                         password: Yup.string().required().min(7)
                     })}
                     onSubmit={ async (values, {setSubmitting, setErrors}) => {
                         try {
-                            await signinWithEmail(values)
-                            setSubmitting(false)
+                            await registerInFirebase(values)
                             dispatch(closeModal())
                         } catch (error) {
-                            setErrors({auth: 'There is a problem with your login.'})
+                            setErrors({auth: error.message})
                             setSubmitting(false)
                         }
                     }}
                 >
                     {({isSubmitting, isValid, dirty, errors}) => (
                         <Form className="ui form">
+                            <MyTextInput name="displayName" placeholder="Display Name"/>
                             <MyTextInput name="email" placeholder="Email Address"/>
                             <MyTextInput name="password" placeholder="Password" type="password"/>
+
                             {errors.auth && <Label basic color="red" style={{marginBottom: 10}} content={errors.auth} />}
+
                             <Button
                                 loading={isSubmitting}
                                 disabled={!isValid || !dirty || isSubmitting}
@@ -44,7 +47,7 @@ const LoginForm = () => {
                                 fluid
                                 size="large"
                                 color="teal"
-                                content="Login"
+                                content="Register"
                             />
 
                             <Divider horizontal>Or</Divider>
@@ -57,4 +60,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default RegisterForm;

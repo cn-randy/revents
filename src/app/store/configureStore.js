@@ -2,6 +2,7 @@ import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./rootReducer";
 import thunk from 'redux-thunk'
+import {verifyAuth} from "../../features/auth/authActions";
 
 /**
  * Creates a redux store and passes the root reducer and any store
@@ -11,5 +12,9 @@ import thunk from 'redux-thunk'
  * @returns {Store<unknown, Action>}
  */
 export const configureStore = () => {
-    return createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
+    const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
+
+    store.dispatch(verifyAuth())
+
+    return store
 }

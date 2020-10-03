@@ -13,6 +13,9 @@ import Sandbox from "../../features/sandbox/Sandbox";
 import ModalManager from "../common/modals/ModalManager";
 import {ToastContainer} from "react-toastify";
 import ErrorComponent from "../common/errors/ErrorComponent";
+import AccountPage from "../../features/auth/AccountPage";
+import {useSelector} from "react-redux";
+import LoadingComponent from "./LoadingComponent";
 
 /**
  * This is the entry component
@@ -25,6 +28,11 @@ import ErrorComponent from "../common/errors/ErrorComponent";
  */
 function App() {
     const {key, pathname} = useLocation()
+    const {initialized} = useSelector(state => state.async)
+
+    if (!initialized) {
+        return <LoadingComponent content="Loading app..." />
+    }
 
     // Render Navbar on all routes except the home page
     return (
@@ -38,6 +46,7 @@ function App() {
                     <Route path="/events/sandbox" component={Sandbox}/>
                     <Route path='/events/:id' component={EventDetailedPage}/>
                     <Route path='/events' component={EventDashboard}/>
+                    <Route path='/auth/account' component={AccountPage}/>
                     <Route path="/error" component={ErrorComponent} />
                     <Route path="/" component={HomePage}/>
                 </Switch>

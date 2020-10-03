@@ -56,3 +56,24 @@ export const cancelEventToggle = (event) => {
         isCancelled: !event.isCancelled,
     })
 }
+
+/**
+ * Register user profile.
+ * Firebase maintains a global collection of authenticated users which stores
+ * the email and password only when sign in by email and password is enabled.
+ * Profile data is stored in the firestore database separately.
+ *
+ * @calledBy firebaseService::registerInFirebase
+ *
+ * @param user
+ *
+ * @returns {user}
+ */
+export const setUserProfileData = (user) => {
+    return db.collection('users').doc(user.uid).set({
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL || null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+}
