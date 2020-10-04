@@ -1,17 +1,21 @@
+// node modules
 import React from "react";
 import ReactDOM from "react-dom";
 import {BrowserRouter} from "react-router-dom";
 import {Provider} from 'react-redux'
 
+// assets
 import "semantic-ui-css/semantic.min.css";
 import "react-toastify/dist/ReactToastify.min.css"
 import "react-calendar/dist/Calendar.css"
 import "./app/layout/styles.css";
 
+// configuration
 import {configureStore} from './app/store/configureStore'
-
-import App from "./app/layout/App";
 import * as serviceWorker from "./serviceWorker";
+
+// React components
+import App from "./app/layout/App";
 import ScrollToTop from './app/layout/scrollToTop'
 
 const store = configureStore()

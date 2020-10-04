@@ -16,6 +16,7 @@ import ErrorComponent from "../common/errors/ErrorComponent";
 import AccountPage from "../../features/auth/AccountPage";
 import {useSelector} from "react-redux";
 import LoadingComponent from "./LoadingComponent";
+import ProfilePage from "../../features/profiles/profilePage/ProfilePage";
 
 /**
  * This is the entry component
@@ -47,7 +48,8 @@ function App() {
                     <Route path='/events/:id' component={EventDetailedPage}/>
                     <Route path='/events' component={EventDashboard}/>
                     <Route path='/auth/account' component={AccountPage}/>
-                    <Route path="/error" component={ErrorComponent} />
+                    <Route path='/profile/:id' component={ProfilePage}/>
+                    <Route path="/error" component={ErrorComponent}/>
                     <Route path="/" component={HomePage}/>
                 </Switch>
             </Container>
