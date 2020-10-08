@@ -1,7 +1,7 @@
 import {SIGN_IN_USER, SIGN_OUT_USER} from "./authConstants";
 import firebase from "../../app/config/firebase";
 import {APP_LOADED} from "../../app/async/asyncReducer";
-import {dataFromSnapshot, getUserProfile} from "../../app/firestore/firestoreStervice";
+import {dataFromSnapshot, getUserProfile} from "../../app/firestore/firestoreService";
 import {listenToCurrentUserProfile} from "../profiles/profileActions";
 
 export const signInUser = (user) => {

@@ -4,7 +4,7 @@ import { Grid } from "semantic-ui-react";
 import EventList from "./EventList";
 import EventListItemPlaceholder from "./EventListItemDashboard";
 import EventFilters from "./EventFilters";
-import {listenTotEventsFromFirestore} from "../../../app/firestore/firestoreStervice";
+import {listenTotEventsFromFirestore} from "../../../app/firestore/firestoreService";
 import {listenToEvents} from "../eventActions";
 import {useFirestoreCollection} from "../../../app/hooks/useFirestoreCollection";
 

@@ -4,7 +4,7 @@ import ProfileHeader from "../ProfileHeader";
 import ProfileContent from "../ProfileContent";
 import {useDispatch, useSelector} from "react-redux";
 import {useFirestoreDoc} from '../../../app/hooks/useFirestoreDoc'
-import {getUserProfile} from "../../../app/firestore/firestoreStervice";
+import {getUserProfile} from "../../../app/firestore/firestoreService";
 import {listenToSelectedUserProfile} from "../profileActions";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 

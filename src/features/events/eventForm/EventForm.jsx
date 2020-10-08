@@ -18,7 +18,7 @@ import {
     addEventToFirestore, cancelEventToggle,
     listenToEventFromFirestore,
     updateEventInFirestore
-} from "../../../app/firestore/firestoreStervice";
+} from "../../../app/firestore/firestoreService";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 export default function EventForm({match, history}) {

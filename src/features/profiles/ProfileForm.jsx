@@ -5,7 +5,7 @@ import MyTextArea from "../../app/common/form/MyTextArea";
 import {Button} from "semantic-ui-react";
 import * as Yup from 'yup'
 import {toast} from "react-toastify";
-import {updateUserProfile} from "../../app/firestore/firestoreStervice";
+import {updateUserProfile} from "../../app/firestore/firestoreService";
 
 const ProfileForm = ({profile}) => {
     const initialValues = {
