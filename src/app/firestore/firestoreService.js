@@ -1,5 +1,5 @@
 import firebase from '../config/firebase'
-import cuid from "cuid";
+
 const db = firebase.firestore()
 
 export const dataFromSnapshot = (snapshot) => {
@@ -21,8 +21,23 @@ export const dataFromSnapshot = (snapshot) => {
     }
 }
 
-export const listenTotEventsFromFirestore = () => {
-    return db.collection('events').orderBy('date')
+export const listenToEventsFromFirestore = (predicate) => {
+    const user = firebase.auth().currentUser
+    let eventsRef = db.collection('events').orderBy('date')
+    console.log(predicate.get('filter'))
+    switch (predicate.get('filter')) {
+        case 'isGoing':
+            return eventsRef
+                .where('attendeeIds', 'array-contains', user.uid)
+                .where('date', '>=', predicate.get('startDate'))
+        case 'isHost':
+            return eventsRef
+                .where('hostUid', '==', user.uid)
+                .where('date', '>=', predicate.get('startDate'))
+        default:
+            return eventsRef
+                .where('date', '>=', predicate.get('startDate'))
+    }
 }
 
 export const listenToEventFromFirestore = (eventId) => {
@@ -30,16 +45,19 @@ export const listenToEventFromFirestore = (eventId) => {
 }
 
 export const addEventToFirestore = (event) => {
+    const user = firebase.auth().currentUser
+
     return db.collection('events').add({
         ...event,
-        hostedBy: 'Wilma',
-        hostPhotoURL: 'https://randomuser.me/api/portraits/women/20.jpg',
+        hostUid: user.uid,
+        hostedBy: user.displayName,
+        hostPhotoURL: user.photoURL || null,
         attendees: firebase.firestore.FieldValue.arrayUnion({
-            id: cuid(),
-            displayName: 'Wilma',
-            photoURL: 'https://randomuser.me/api/portraits/women/20.jpg'
-
-        })
+            id: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL || null
+        }),
+        attendeeIds: firebase.firestore.FieldValue.arrayUnion(user.uid)
     })
 }
 
@@ -85,7 +103,7 @@ export const getUserProfile = (userId) => {
 export const updateUserProfile = async (profile) => {
     const user = firebase.auth().currentUser
     try {
-        if (user.displayName !== profile.displayName ) {
+        if (user.displayName !== profile.displayName) {
             await user.updateProfile({
                 displayName: profile.displayName,
             })
@@ -144,5 +162,55 @@ export const setMainPhoto = async (photo) => {
 
 export const deletePhotoFromCollection = (photoId) => {
     const userUid = firebase.auth().currentUser.uid
+
     return db.collection('users').doc(userUid).collection('photos').doc(photoId).delete()
+}
+
+export const addUserAttendance = (event) => {
+    const user = firebase.auth().currentUser
+
+    return db.collection('events').doc(event.id).update({
+        attendees: firebase.firestore.FieldValue.arrayUnion({
+            id: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL || null
+        }),
+        attendeeIds: firebase.firestore.FieldValue.arrayUnion(user.uid)
+    })
+}
+
+export const cancelUserAttendance = async (event) => {
+    const user = firebase.auth().currentUser
+    try {
+        const eventDoc = await db.collection('events').doc(event.id).get()
+
+        return await db.collection('events').doc(event.id).update({
+            attendeeIds: firebase.firestore.FieldValue.arrayRemove(user.uid),
+            attendees: eventDoc.data().attendees.filter(attendee => attendee.id !== user.uid),
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getUserEventsQuery = (activeTab, userUid) => {
+    const today = new Date()
+    let eventsRef = db.collection('events')
+
+    switch (activeTab) {
+        case 1: // past events
+            return eventsRef
+                .where('attendeeIds', 'array-contains', userUid)
+                .where('date', '<=', today)
+                .orderBy('date', 'desc')
+        case 2: // hosting
+            return eventsRef
+                .where('hostUid', '==', userUid)
+                .orderBy('date')
+        default: // future events
+            return eventsRef
+                .where('attendeeIds', 'array-contains', userUid)
+                .where('date', '>=', today)
+                .orderBy('date')
+    }
 }

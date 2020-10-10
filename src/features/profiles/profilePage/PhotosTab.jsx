@@ -17,7 +17,7 @@ const PhotosTab = ({profile, isCurrentUser}) => {
     const [deleting, setDeleting] = useState({isDeleting: false, target: null})
 
     useFirestoreCollection({
-        query: getUserPhotos(profile.id),
+        query: () => getUserPhotos(profile.id),
         data: photos => dispatch(listenToUserPhotos(photos)),
         dependencies: [profile.id, dispatch]
     })

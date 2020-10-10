@@ -1,20 +1,30 @@
+// node modules
 import React from "react";
 import { Redirect } from 'react-router-dom'
 import {Grid} from "semantic-ui-react";
+
+// hooks
+import {useSelector, useDispatch} from "react-redux";
+import {useFirestoreDoc} from "../../../app/hooks/useFirestoreDoc";
+
+// database
+import {listenToEventFromFirestore} from "../../../app/firestore/firestoreService";
+import {listenToEvents} from "../eventActions";
+
+// components
 import EventDetailedHeader from "./EventDetailedHeader";
 import EventDetailedInfo from "./EventDetailedInfo";
 import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSidebar from "./EventDetailedSidebar";
-import {useSelector, useDispatch} from "react-redux";
-import {useFirestoreDoc} from "../../../app/hooks/useFirestoreDoc";
-import {listenToEventFromFirestore} from "../../../app/firestore/firestoreService";
-import {listenToEvents} from "../eventActions";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 const EventDetailedPage = ({match}) => {
     const dispatch = useDispatch()
+    const {currentUser} = useSelector(state => state.auth)
     const event = useSelector(state => state.event.events.find(evt => evt.id === match.params.id))
     const {loading, error} = useSelector(state => state.async)
+    const isHost = event?.hostUid === currentUser.uid
+    const isGoing = event?.attendees?.some(a => a.id === currentUser.uid)
 
     useFirestoreDoc({
         query: () => listenToEventFromFirestore(match.params.id),
@@ -33,12 +43,12 @@ const EventDetailedPage = ({match}) => {
     return (
         <Grid>
             <Grid.Column width={10}>
-                <EventDetailedHeader event={event}/>
+                <EventDetailedHeader event={event} isGoing={isGoing} isHost={isHost}/>
                 <EventDetailedInfo event={event}/>
                 <EventDetailedChat/>
             </Grid.Column>
             <Grid.Column width={6}>
-                <EventDetailedSidebar attendees={event?.attendees}/>
+                <EventDetailedSidebar attendees={event?.attendees} hostUid={event?.hostUid}/>
             </Grid.Column>
         </Grid>
     );
