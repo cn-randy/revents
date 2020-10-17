@@ -64,7 +64,7 @@ const AccountPage = () => {
             <React.Fragment>
                 <Header color="teal" sub content="Google account"/>
                 <p>Please visit gppglr to update your account</p>
-                <Button icon="googlr" color="google plus" as={Link} to="https://goodle.com" content="Go to Google"/>
+                <Button icon="google" color="google plus" as={Link} to="https://goodle.com" content="Go to Google"/>
             </React.Fragment>
             }
         </Segment>
